@@ -38,3 +38,19 @@ impl ClapAppExt for clap::App<'static> {
         app
     }
 }
+
+
+pub fn add_input<'a>(app: clap::App<'a>, subcommand: &'static str) -> clap::App<'a> {
+    app.subcommand(clap::App::new(subcommand)
+        .arg(clap::Arg::new("input").short('i').takes_value(true).required(true))
+    )
+}
+
+pub fn get_input(matches: &clap::ArgMatches) -> Result<&str, String> {
+    matches.value_of("input").ok_or(format!("No input file was given"))
+}
+
+pub fn expect_submatches<'a>(matches: &'a clap::ArgMatches, subcommand: &'static str) -> &'a clap::ArgMatches{
+    matches.subcommand_matches(subcommand)
+        .expect(format!("Subcommand {} was not invoked", subcommand).as_str())
+}

@@ -11,6 +11,7 @@ hosted on 'adventofcode.com'.
 
 mod command_line;
 mod day_1;
+mod core;
 
 fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap::ArgMatches {
     use command_line::ClapAppExt;
