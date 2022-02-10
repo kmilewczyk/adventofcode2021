@@ -1,7 +1,7 @@
 pub trait ChallengeSolutionArgs {
     // Returns the name for the subcommand, by which the args can be indentified back
-    fn add_subcommand(&self, app: &mut clap::App) -> &'static str;
-    fn run(&mut self, matches: &clap::ArgMatches);
+    fn add_subcommand<'a>(&self, app: clap::App<'a>) -> (&'static str, clap::App<'a>);
+    fn run(&mut self, matches: &clap::ArgMatches) -> Result<String, String>;
 }
 
 pub struct ClapSubcommandResolver {
@@ -27,14 +27,14 @@ impl ClapSubcommandResolver {
     }
 }
 
-trait ClapAppExt {
+pub trait ClapAppExt {
     fn aoc_solution(self, solution_args: Box<dyn ChallengeSolutionArgs>, resolver: &mut ClapSubcommandResolver) -> Self;
 }
 
 impl ClapAppExt for clap::App<'static> {
-    fn aoc_solution(mut self, solution_args: Box<dyn ChallengeSolutionArgs>, resolver: &mut ClapSubcommandResolver) -> Self { 
-        let subcommand = solution_args.add_subcommand(&mut self);
+    fn aoc_solution(self, solution_args: Box<dyn ChallengeSolutionArgs>, resolver: &mut ClapSubcommandResolver) -> Self { 
+        let (subcommand, app) = solution_args.add_subcommand(self);
         resolver.add_subcommand(subcommand, solution_args);
-        self
+        app
     }
 }
