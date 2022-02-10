@@ -1,3 +1,4 @@
+use crate::day_1::SonarSlidingWindow;
 use crate::day_1::SonarSweepDepth;
 
 const PROGRAM_NAME: &str = "Advent of Code 2021 Solutions";
@@ -22,6 +23,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .about(ABOUT)
         .after_help(DESCRIPTION)
         .aoc_solution(Box::new(SonarSweepDepth {}), resolver)
+        .aoc_solution(Box::new(SonarSlidingWindow {}), resolver)
         .get_matches()
 }
 
