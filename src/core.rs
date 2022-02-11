@@ -1,5 +1,9 @@
+use std::borrow::Cow;
+
 pub mod file {
-    pub fn read_lines(path: &str) -> Result<std::io::Lines<std::io::BufReader<std::fs::File>>, String> {
+    use crate::core::Result;
+
+    pub fn read_lines(path: &str) -> Result<std::io::Lines<std::io::BufReader<std::fs::File>>> {
         use std::io::BufRead;
 
         let reader = {
@@ -9,4 +13,7 @@ pub mod file {
 
         Ok(reader.lines())
     }
+
 }
+
+pub type Result<T> = std::result::Result<T, String>;

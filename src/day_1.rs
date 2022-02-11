@@ -1,16 +1,24 @@
-use crate::core::file::read_lines;
 use std::collections::VecDeque;
 
 pub mod cli {
-    use crate::command_line::get_input;
+    use crate::command_line::get_input_path;
     use crate::command_line::expect_submatches;
     use crate::command_line::add_input;
     use crate::command_line::ChallengeSolutionArgs;
     use crate::day_1::run_sonar_sliding_window;
     use crate::day_1::run_sonar_sweep_depth;
+    use crate::core::file::read_lines;
+
+    use crate::core::Result;
 
     const SONAR_SWEEP_DEPTH_SUBCOMMAND: &str = "1_1";
     const SONAR_SLIDING_WINDOW_SUBCOMMAND: &str = "1_2";
+
+    fn parse_value(read_result: std::io::Result<String>) -> Result<isize> {
+        let line = read_result.map_err(|err| format!("Error while reading line of file: {}", err))?;
+
+        line.parse::<isize>().map_err(|err| format!("Can't parse line '{}' to isize. {}", line, err))
+    }
 
     pub struct SonarSweepDepth { }
 
@@ -19,10 +27,12 @@ pub mod cli {
             (SONAR_SWEEP_DEPTH_SUBCOMMAND, add_input(app, SONAR_SWEEP_DEPTH_SUBCOMMAND))
         }
 
-        fn run(&mut self, matches: &clap::ArgMatches) -> Result<String, String> { 
+        fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
             let submatches = expect_submatches(matches, SONAR_SWEEP_DEPTH_SUBCOMMAND);
 
-            let input = get_input(submatches)?;
+            let input_path = get_input_path(submatches)?;
+
+            let input = read_lines(input_path)?.map(parse_value);
 
             run_sonar_sweep_depth(input)
         }
@@ -35,28 +45,24 @@ pub mod cli {
             (SONAR_SLIDING_WINDOW_SUBCOMMAND, add_input(app, SONAR_SLIDING_WINDOW_SUBCOMMAND))
         }
 
-        fn run(&mut self, matches: &clap::ArgMatches) -> Result<String, String> { 
+        fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
             let submatches = expect_submatches(matches, SONAR_SLIDING_WINDOW_SUBCOMMAND);
 
-            let input = get_input(submatches)?;
+            let input_path = get_input_path(submatches)?;
+
+            let input = read_lines(input_path)?.map(parse_value);
 
             run_sonar_sliding_window(input)
         }
     }
 }
 
-fn parse_value(read_result: std::io::Result<String>) -> Result<isize, String> {
-    let line = read_result.map_err(|err| format!("Error while reading line of file: {}", err))?;
-
-    line.parse::<isize>().map_err(|err| format!("Can't parse line '{}' to isize. {}", line, err))
-}
-
-pub fn run_sonar_sweep_depth(input_path: &str) -> Result<String, String>{
+pub fn run_sonar_sweep_depth<'a>(input: impl IntoIterator<Item = Result<isize, String>>) -> Result<String, String>{
     let mut previous_value_option: Option<isize> = None;
     let mut increased_counter: isize = 0;
 
-    for result in read_lines(input_path)? {
-        let value = parse_value(result)?;
+    for read in input {
+        let value = read?;
 
         if let Some(previous_value) = previous_value_option {
             // If this isn't the first element
@@ -73,14 +79,14 @@ pub fn run_sonar_sweep_depth(input_path: &str) -> Result<String, String>{
 
 }
 
-pub fn run_sonar_sliding_window(input_path: &str) -> Result<String, String> {
+pub fn run_sonar_sliding_window(input: impl IntoIterator<Item = Result<isize, String>>) -> Result<String, String> {
     let mut previous_window_option: Option<isize> = None;
 
     let mut incomplete_windows: VecDeque<isize> = VecDeque::new();
     let mut increased_counter: isize = 0;
 
-    for result in read_lines(input_path)? {
-        let value = parse_value(result)?;
+    for read in input {
+        let value = read?;
 
         incomplete_windows.iter_mut().for_each(|e| *e += value);
         incomplete_windows.push_back(value);
