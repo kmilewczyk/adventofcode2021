@@ -1,5 +1,5 @@
-use crate::day_1::SonarSlidingWindow;
-use crate::day_1::SonarSweepDepth;
+use crate::day_1::cli::SonarSlidingWindow;
+use crate::day_1::cli::SonarSweepDepth;
 
 const PROGRAM_NAME: &str = "Advent of Code 2021 Solutions";
 const VERSION: &str = "0.1.0";
@@ -11,8 +11,9 @@ hosted on 'adventofcode.com'.
 ";
 
 mod command_line;
-mod day_1;
 mod core;
+mod day_1;
+mod day_2;
 
 fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap::ArgMatches {
     use command_line::ClapAppExt;
