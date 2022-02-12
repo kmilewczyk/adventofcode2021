@@ -25,8 +25,8 @@ pub mod cli {
     pub struct SonarSweepDepth { }
 
     impl ChallengeSolutionArgs for SonarSweepDepth {
-        fn add_subcommand<'a>(&self, app: clap::App<'a>) -> (&'static str, clap::App<'a>) {
-            (SONAR_SWEEP_DEPTH_SUBCOMMAND, add_input(app, SONAR_SWEEP_DEPTH_SUBCOMMAND))
+        fn get_subcommand(&self) -> &'static str {
+            SONAR_SWEEP_DEPTH_SUBCOMMAND
         }
 
         fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
@@ -43,8 +43,8 @@ pub mod cli {
     pub struct SonarSlidingWindow { }
 
     impl ChallengeSolutionArgs for SonarSlidingWindow {
-        fn add_subcommand<'a>(&self, app: clap::App<'a>) -> (&'static str, clap::App<'a>) {
-            (SONAR_SLIDING_WINDOW_SUBCOMMAND, add_input(app, SONAR_SLIDING_WINDOW_SUBCOMMAND))
+        fn get_subcommand(&self) -> &'static str {
+            SONAR_SLIDING_WINDOW_SUBCOMMAND
         }
 
         fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 

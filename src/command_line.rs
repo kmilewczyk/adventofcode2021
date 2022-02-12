@@ -3,8 +3,14 @@ use anyhow::anyhow;
 
 pub trait ChallengeSolutionArgs {
     // Returns the name for the subcommand, by which the args can be indentified back
-    fn add_subcommand<'a>(&self, app: clap::App<'a>) -> (&'static str, clap::App<'a>);
     fn run(&mut self, matches: &clap::ArgMatches) -> Result<String>;
+    fn get_subcommand(&self) -> &'static str;
+}
+
+impl dyn ChallengeSolutionArgs {
+    fn add_subcommand<'a>(&self, app: clap::App<'a>) -> (&'static str, clap::App<'a>) {
+        (self.get_subcommand(), add_input(app, self.get_subcommand()))
+    }
 }
 
 pub struct ClapSubcommandResolver {
