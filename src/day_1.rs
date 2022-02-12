@@ -1,11 +1,9 @@
-use std::error::Error;
 use std::collections::VecDeque;
 use anyhow::Result;
 
 pub mod cli {
     use crate::command_line::get_input_path;
     use crate::command_line::expect_submatches;
-    use crate::command_line::add_input;
     use crate::command_line::ChallengeSolutionArgs;
     use crate::day_1::run_sonar_sliding_window;
     use crate::day_1::run_sonar_sweep_depth;
