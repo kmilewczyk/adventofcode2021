@@ -1,3 +1,4 @@
+use crate::day_2::cli::SonarAimedDive;
 use crate::day_2::cli::SonarDive;
 use crate::day_1::cli::SonarSlidingWindow;
 use crate::day_1::cli::SonarSweepDepth;
@@ -16,6 +17,7 @@ mod core;
 mod day_1;
 mod day_2;
 
+
 fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap::ArgMatches {
     use command_line::ClapAppExt;
 
@@ -27,6 +29,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(SonarSweepDepth {}), resolver)
         .aoc_solution(Box::new(SonarSlidingWindow {}), resolver)
         .aoc_solution(Box::new(SonarDive {}), resolver)
+        .aoc_solution(Box::new(SonarAimedDive {}), resolver)
         .get_matches()
 }
 
