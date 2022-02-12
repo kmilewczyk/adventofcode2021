@@ -1,4 +1,5 @@
-use crate::core::Result;
+use anyhow::Result;
+use anyhow::anyhow;
 
 pub trait ChallengeSolutionArgs {
     // Returns the name for the subcommand, by which the args can be indentified back
@@ -23,8 +24,8 @@ impl ClapSubcommandResolver {
 
     pub fn resolve(&mut self, matches: &clap::ArgMatches) -> Result<&mut Box<dyn ChallengeSolutionArgs>>{
         match matches.subcommand() {
-            Some((subcommand, _)) => self.subcommands.get_mut(subcommand).ok_or(format!("'{}' is not known subcommand.", subcommand)),
-            None => Err(String::from("No command was specified."))
+            Some((subcommand, _)) => self.subcommands.get_mut(subcommand).ok_or(anyhow!("'{}' is not known subcommand.", subcommand)),
+            None => Err(anyhow!("No command was specified."))
         }
     }
 }
@@ -49,7 +50,7 @@ pub fn add_input<'a>(app: clap::App<'a>, subcommand: &'static str) -> clap::App<
 }
 
 pub fn get_input_path(matches: &clap::ArgMatches) -> Result<&str> {
-    matches.value_of("input").ok_or(format!("No input file was given"))
+    matches.value_of("input").ok_or(anyhow!("No input file was given"))
 }
 
 pub fn expect_submatches<'a>(matches: &'a clap::ArgMatches, subcommand: &'static str) -> &'a clap::ArgMatches{

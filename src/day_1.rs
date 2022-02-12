@@ -1,4 +1,6 @@
+use std::error::Error;
 use std::collections::VecDeque;
+use anyhow::Result;
 
 pub mod cli {
     use crate::command_line::get_input_path;
@@ -9,15 +11,15 @@ pub mod cli {
     use crate::day_1::run_sonar_sweep_depth;
     use crate::core::file::read_lines;
 
-    use crate::core::Result;
+    use anyhow::{ Context, Result };
 
     const SONAR_SWEEP_DEPTH_SUBCOMMAND: &str = "1_1";
     const SONAR_SLIDING_WINDOW_SUBCOMMAND: &str = "1_2";
 
     fn parse_value(read_result: std::io::Result<String>) -> Result<isize> {
-        let line = read_result.map_err(|err| format!("Error while reading line of file: {}", err))?;
+        let line = read_result.with_context(|| format!("Error while reading a line of file."))?;
 
-        line.parse::<isize>().map_err(|err| format!("Can't parse line '{}' to isize. {}", line, err))
+        line.parse::<isize>().with_context(|| format!("Can't parse line '{}' to isize.", line))
     }
 
     pub struct SonarSweepDepth { }
@@ -57,7 +59,7 @@ pub mod cli {
     }
 }
 
-pub fn run_sonar_sweep_depth<'a>(input: impl IntoIterator<Item = Result<isize, String>>) -> Result<String, String>{
+pub fn run_sonar_sweep_depth<'a>(input: impl IntoIterator<Item = Result<isize>>) -> Result<String>{
     let mut previous_value_option: Option<isize> = None;
     let mut increased_counter: isize = 0;
 
@@ -79,7 +81,7 @@ pub fn run_sonar_sweep_depth<'a>(input: impl IntoIterator<Item = Result<isize, S
 
 }
 
-pub fn run_sonar_sliding_window(input: impl IntoIterator<Item = Result<isize, String>>) -> Result<String, String> {
+pub fn run_sonar_sliding_window(input: impl IntoIterator<Item = Result<isize>>) -> Result<String> {
     let mut previous_window_option: Option<isize> = None;
 
     let mut incomplete_windows: VecDeque<isize> = VecDeque::new();
