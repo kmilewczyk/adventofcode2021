@@ -1,4 +1,4 @@
-use anyhow::{ Context, Result, anyhow };
+use anyhow::{ Result, anyhow };
 
 pub mod cli {
     use crate::day_2::run_dive;
@@ -27,13 +27,13 @@ pub mod cli {
     }
 }
 
-pub fn run_dive(input: impl IntoIterator<Item = std::io::Result<String>>) -> Result<isize> {
+pub fn run_dive<S: AsRef<str>>(input: impl IntoIterator<Item = std::io::Result<S>>) -> Result<isize> {
     let mut depth = 0;
     let mut horizontal = 0;
 
     for result in input {
         let line = result?;
-        let mut splits = line.split(' ');
+        let mut splits = line.as_ref().split(' ');
         let command = splits.next().ok_or(anyhow!("The line is empty"))?;
         let value = splits.next().ok_or(anyhow!("There is no second argument"))?.parse::<isize>()?;
 
@@ -62,7 +62,7 @@ mod tests {
         down 8\n\
         forward 2";
 
-        let result = run_dive(INPUT.split('\n').map(|e| Ok(e.to_string())));
+        let result = run_dive(INPUT.split('\n').map(|e| Ok(e)));
 
         match result {
             Ok(val) => assert_eq!(val, 150),
