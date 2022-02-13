@@ -2,12 +2,10 @@ use std::collections::VecDeque;
 use anyhow::Result;
 
 pub mod cli {
-    use crate::command_line::get_input_path;
-    use crate::command_line::expect_submatches;
+    use crate::command_line::read_input_from_matches;
     use crate::command_line::ChallengeSolutionArgs;
     use crate::day_1::run_sonar_sliding_window;
     use crate::day_1::run_sonar_sweep_depth;
-    use crate::core::file::read_lines;
 
     use anyhow::{ Context, Result };
 
@@ -28,11 +26,7 @@ pub mod cli {
         }
 
         fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
-            let submatches = expect_submatches(matches, SONAR_SWEEP_DEPTH_SUBCOMMAND);
-
-            let input_path = get_input_path(submatches)?;
-
-            let input = read_lines(input_path)?.map(parse_value);
+            let input = read_input_from_matches(self, matches)?.map(parse_value);
 
             run_sonar_sweep_depth(input)
         }
@@ -46,11 +40,7 @@ pub mod cli {
         }
 
         fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
-            let submatches = expect_submatches(matches, SONAR_SLIDING_WINDOW_SUBCOMMAND);
-
-            let input_path = get_input_path(submatches)?;
-
-            let input = read_lines(input_path)?.map(parse_value);
+            let input = read_input_from_matches(self, matches)?.map(parse_value);
 
             run_sonar_sliding_window(input)
         }

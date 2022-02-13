@@ -16,6 +16,7 @@ mod command_line;
 mod core;
 mod day_1;
 mod day_2;
+mod day_3;
 
 
 fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap::ArgMatches {

@@ -1,3 +1,4 @@
+use crate::core::file::read_lines;
 use anyhow::Result;
 use anyhow::anyhow;
 
@@ -11,6 +12,16 @@ impl dyn ChallengeSolutionArgs {
     fn add_subcommand<'a>(&self, app: clap::App<'a>) -> (&'static str, clap::App<'a>) {
         (self.get_subcommand(), add_input(app, self.get_subcommand()))
     }
+
+}
+
+pub fn read_input_from_matches(args: &impl ChallengeSolutionArgs, matches: &clap::ArgMatches) -> anyhow::Result<std::io::Lines<std::io::BufReader<std::fs::File>>> {
+    use anyhow::Context;
+
+    let submatches = expect_submatches(matches, args.get_subcommand());
+    let input_path = get_input_path(submatches)?;
+
+    read_lines(input_path).with_context(|| "Failed to read file")
 }
 
 pub struct ClapSubcommandResolver {

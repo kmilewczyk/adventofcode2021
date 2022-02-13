@@ -2,11 +2,9 @@ use anyhow::{ Result, anyhow };
 
 
 pub mod cli {
+    use crate::command_line::read_input_from_matches;
     use crate::day_2::run_aimed_dive;
-use crate::day_2::run_dive;
-    use crate::core::file::read_lines;
-    use crate::command_line::get_input_path;
-    use crate::command_line::expect_submatches;
+    use crate::day_2::run_dive;
     use crate::command_line::ChallengeSolutionArgs;
     use anyhow::Result;
 
@@ -21,9 +19,7 @@ use crate::day_2::run_dive;
         }
 
         fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
-            let submatches = expect_submatches(matches, DIVE_SUBCOMMAND);
-            let input_path = get_input_path(submatches)?;
-            let input = read_lines(input_path)?;
+            let input = read_input_from_matches(self, matches)?;
         
             run_dive(input).map(|r| r.to_string())
         }
@@ -37,9 +33,7 @@ use crate::day_2::run_dive;
         }
 
         fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
-            let submatches = expect_submatches(matches, AIMED_DIVE_SUBCOMMAND);
-            let input_path = get_input_path(submatches)?;
-            let input = read_lines(input_path)?;
+            let input = read_input_from_matches(self, matches)?;
         
             run_aimed_dive(input).map(|r| r.to_string())
         }
@@ -105,7 +99,8 @@ mod tests {
     use crate::day_2::run_aimed_dive;
     use crate::day_2::run_dive;
 
-    const INPUT: &str = "forward 5\n\
+    const INPUT: &str = "\
+        forward 5\n\
         down 5\n\
         forward 8\n\
         up 3\n\
