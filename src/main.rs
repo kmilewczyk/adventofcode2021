@@ -1,3 +1,4 @@
+use crate::day_3::cli::BinaryDiagnostic;
 use crate::day_2::cli::SonarAimedDive;
 use crate::day_2::cli::SonarDive;
 use crate::day_1::cli::SonarSlidingWindow;
@@ -31,6 +32,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(SonarSlidingWindow {}), resolver)
         .aoc_solution(Box::new(SonarDive {}), resolver)
         .aoc_solution(Box::new(SonarAimedDive {}), resolver)
+        .aoc_solution(Box::new(BinaryDiagnostic {}), resolver)
         .get_matches()
 }
 
