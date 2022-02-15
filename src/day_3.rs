@@ -21,13 +21,13 @@ pub mod cli {
     }
 }
 
-pub fn run_binary_diagnostic<S: AsRef<str>>(input: impl IntoIterator<Item = std::io::Result<S>>) -> anyhow::Result<isize> {
-    #[derive(Clone, Copy)]
-    struct BitCount {
-        zero: usize,
-        one: usize,
-    }
+#[derive(Clone, Copy)]
+struct BitCount {
+    zero: usize,
+    one: usize,
+}
 
+fn create_bit_counts_array<S: AsRef<str>>(input: impl IntoIterator<Item = std::io::Result<S>>) -> anyhow::Result<Vec<BitCount>> {
     // Create an array of counts by peeking the first line, and finding out the size of the input.
     let mut input = input.into_iter().peekable();
 
@@ -54,6 +54,13 @@ pub fn run_binary_diagnostic<S: AsRef<str>>(input: impl IntoIterator<Item = std:
             }
         }
     }
+
+    Ok(counts)
+}
+
+pub fn run_binary_diagnostic<S: AsRef<str>>(input: impl IntoIterator<Item = std::io::Result<S>>) -> anyhow::Result<isize> {
+    let counts = create_bit_counts_array(input)?;
+    let line_length = counts.len();
 
     let mut gamma = 0;
     let mut epsilon = 0;
