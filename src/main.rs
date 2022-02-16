@@ -1,3 +1,4 @@
+use crate::day_3::cli::LifeSupportRating;
 use crate::day_3::cli::BinaryDiagnostic;
 use crate::day_2::cli::SonarAimedDive;
 use crate::day_2::cli::SonarDive;
@@ -33,6 +34,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(SonarDive {}), resolver)
         .aoc_solution(Box::new(SonarAimedDive {}), resolver)
         .aoc_solution(Box::new(BinaryDiagnostic {}), resolver)
+        .aoc_solution(Box::new(LifeSupportRating {}), resolver)
         .get_matches()
 }
 
