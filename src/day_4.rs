@@ -137,25 +137,29 @@ pub fn read_puzzle_input<S: AsRef<str>>(input: impl IntoIterator<Item = std::io:
 
     let mut input_iter = input.into_iter();
 
-    let first_line = input_iter.next().ok_or(anyhow::anyhow!("No input was given"))?.with_context(|| "Failed to read a first line")?;
-    let values: Vec<u8> = first_line.as_ref().split(',')
-        .map(|substring| substring.parse::<u8>())
-        .collect::<Result<Vec<_>, _>>()?; // One day this will by try_collect(). Hopefully
+    let values: Vec<u8> = {
+        let first_line = input_iter.next()
+            .ok_or(anyhow::anyhow!("No input was given"))?.with_context(|| "Failed to read a first line")?;
 
-    input_iter.next(); // Remove newline
+        first_line.as_ref().split(',')
+            .map(|substring| substring.parse::<u8>())
+            .collect::<Result<Vec<_>, _>>()? // One day this will by try_collect(). Hopefully
+    };
+
     let mut card_acc: BingoCardAcc = input_iter.fold(Ok(BingoCardAcc::new()), |acc_res: anyhow::Result<BingoCardAcc>, result| {
         let mut acc = acc_res?;
         let asref = result?;
         let line: &str = asref.as_ref();
 
-        if line.is_empty() {
-            acc.flush_values();
-        } else {
-            let row = line.split(' ').filter(|word| !word.is_empty())
+        if !line.is_empty() {
+            let row = line.split(' ')
+                .filter(|word| !word.is_empty())
                 .map(|substring| substring.parse::<u8>())
                 .collect::<Result<Vec<_>, _>>()?;
 
             acc.add_row(row);
+        } else {
+            acc.flush_values();
         }
 
         Ok(acc)
@@ -214,7 +218,7 @@ mod test {
     use crate::day_4::run_giant_squid;
     use crate::day_4::read_puzzle_input;
 
-const EXAMPLE: &str = "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1\n\
+    const EXAMPLE: &str = "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1\n\
 \n\
         22 13 17 11  0\n\
         8  2 23  4 24\n\
