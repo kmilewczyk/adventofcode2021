@@ -1,7 +1,7 @@
 pub mod cli {
     use crate::day_3::run_life_support_rating;
-use crate::day_3::read_input_to_vec;
-use crate::command_line::read_input_from_matches;
+    use crate::day_3::read_input_to_vec;
+    use crate::command_line::read_input_from_matches;
     use crate::day_3::run_binary_diagnostic;
     use crate::command_line::ChallengeSolutionArgs;
     use anyhow::Result;

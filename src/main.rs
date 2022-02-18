@@ -1,3 +1,4 @@
+use crate::day_4::cli::GiantSquid;
 use crate::day_3::cli::LifeSupportRating;
 use crate::day_3::cli::BinaryDiagnostic;
 use crate::day_2::cli::SonarAimedDive;
@@ -19,6 +20,7 @@ mod core;
 mod day_1;
 mod day_2;
 mod day_3;
+mod day_4;
 
 
 fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap::ArgMatches {
@@ -35,6 +37,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(SonarAimedDive {}), resolver)
         .aoc_solution(Box::new(BinaryDiagnostic {}), resolver)
         .aoc_solution(Box::new(LifeSupportRating {}), resolver)
+        .aoc_solution(Box::new(GiantSquid {}), resolver)
         .get_matches()
 }
 
