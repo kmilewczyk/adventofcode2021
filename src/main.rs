@@ -1,3 +1,4 @@
+use crate::day_4::cli::LosingBoard;
 use crate::day_4::cli::GiantSquid;
 use crate::day_3::cli::LifeSupportRating;
 use crate::day_3::cli::BinaryDiagnostic;
@@ -38,6 +39,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(BinaryDiagnostic {}), resolver)
         .aoc_solution(Box::new(LifeSupportRating {}), resolver)
         .aoc_solution(Box::new(GiantSquid {}), resolver)
+        .aoc_solution(Box::new(LosingBoard {}), resolver)
         .get_matches()
 }
 

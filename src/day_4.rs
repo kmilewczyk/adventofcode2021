@@ -1,4 +1,5 @@
 pub mod cli {
+    use crate::day_4::run_losing_board;
     use crate::day_4::run_giant_squid;
     use crate::day_4::read_puzzle_input;
     use crate::command_line::read_input_from_matches;
@@ -6,6 +7,7 @@ pub mod cli {
     use anyhow::Result;
 
     const GIANT_SQUID_COMMAND: &str = "4_1";
+    const LOSING_BOARD_COMMAND: &str = "4_2";
 
     pub struct GiantSquid { }
 
@@ -19,6 +21,23 @@ pub mod cli {
             let puzzle = read_puzzle_input(input)?;
             
             let answer = run_giant_squid(puzzle);
+
+            Ok(format!("Answer is: {}", answer))
+        }
+    }
+
+    pub struct LosingBoard { }
+
+    impl ChallengeSolutionArgs for LosingBoard {
+        fn get_subcommand(&self) -> &'static str {
+            LOSING_BOARD_COMMAND
+        }
+
+        fn run(&mut self, matches: &clap::ArgMatches) -> Result<String> { 
+            let input = read_input_from_matches(self, matches)?;
+            let puzzle = read_puzzle_input(input)?;
+            
+            let answer = run_losing_board(puzzle);
 
             Ok(format!("Answer is: {}", answer))
         }
@@ -151,15 +170,47 @@ fn run_giant_squid(input: PuzzleInput) -> u32 {
     let values = input.values;
     let mut cards = input.cards;
 
-    let answer = values.into_iter().map(|value| {
-        cards.iter_mut().map(|card| card.cross_value(value)).find(|bingo| bingo.is_some())
-    }).find(|bingo| bingo.is_some()).unwrap().unwrap().unwrap();
+    let answer = values.into_iter().find_map(|value| {
+        cards.iter_mut().find_map(|card| card.cross_value(value))
+    }).unwrap();
 
     return answer;
 }
 
+pub fn run_losing_board(input: PuzzleInput) -> u32 {
+    use retain_mut::RetainMut;
+
+    let values = input.values;
+    let mut cards = input.cards;
+    let mut scores: Vec<u32> = Vec::new();
+
+    let answer = values.into_iter().find_map(|value| {
+        scores.clear();
+
+        cards.retain_mut(|card| {
+            match card.cross_value(value) {
+                None => true,
+                Some(bingo) => {
+                    scores.push(bingo);
+                    false
+                }
+            }
+        });
+
+        match cards.is_empty() {
+            false => None,
+            true => {
+                Some(*scores.last().unwrap())
+            }
+        }
+    }).unwrap();
+
+    answer
+}
+
 #[cfg(test)]
 mod test {
+    use crate::day_4::run_losing_board;
     use crate::day_4::run_giant_squid;
     use crate::day_4::read_puzzle_input;
 
@@ -190,4 +241,10 @@ const EXAMPLE: &str = "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,2
         assert_eq!(answer, 4512);
     }
 
+    #[test]
+    fn it_passes_losing_board_example() {
+        let puzzle_input = read_puzzle_input(EXAMPLE.split('\n').map(|s| Ok(s))).unwrap();
+        let answer = run_losing_board(puzzle_input);
+        assert_eq!(answer, 1924);
+    }
 }
