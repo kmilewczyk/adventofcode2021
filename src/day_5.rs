@@ -99,7 +99,9 @@ fn diagonal(floor: &mut OceanFloor, p1: Point, p2: Point) -> usize {
     let mut acc = 0;
     let mut x = p1[0] as isize;
     let mut y = p1[1] as isize;
-    for _ in start..end+1 {
+
+    let x2 = p2[0] as isize;
+    while x != x2 {
         let val = &mut floor[point_to_pos(x as usize, y as usize)];
 
         acc += match val {
