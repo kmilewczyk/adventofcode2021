@@ -1,3 +1,4 @@
+use crate::day_5::cli::HydroDiagonal;
 use crate::day_5::cli::HydrotermalVenture;
 use crate::day_4::cli::LosingBoard;
 use crate::day_4::cli::GiantSquid;
@@ -51,6 +52,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(GiantSquid {}), resolver)
         .aoc_solution(Box::new(LosingBoard {}), resolver)
         .aoc_solution(Box::new(HydrotermalVenture {}), resolver)
+        .aoc_solution(Box::new(HydroDiagonal {}), resolver)
         .get_matches()
 }
 
