@@ -50,7 +50,7 @@ const CARD_HEIGHT: usize = 5;
 pub struct BingoCard {
     uncrossed_sum: u32,
     // Association of a value on a bingo card to a tuple of its column and row positions
-    value_map: std::collections::HashMap<u8, (usize, usize)>,
+    value_map: std::collections::HashMap<u8, (usize, usize), ahash::RandomState>,
     uncrossed_columns: [u8; 5],
     uncrossed_rows: [u8; 5],
 }
@@ -59,7 +59,7 @@ impl BingoCard {
     fn new(values: &[u8; 25]) -> BingoCard {
         let mut card = BingoCard {
             uncrossed_sum: 0,
-            value_map: std::collections::HashMap::new(),
+            value_map: std::collections::HashMap::default(),
             uncrossed_columns: [5; 5],
             uncrossed_rows: [5; 5]
         };
