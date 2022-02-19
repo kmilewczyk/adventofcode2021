@@ -1,3 +1,4 @@
+use crate::day_5::cli::HydrotermalVenture;
 use crate::day_4::cli::LosingBoard;
 use crate::day_4::cli::GiantSquid;
 use crate::day_3::cli::LifeSupportRating;
@@ -22,6 +23,15 @@ mod day_1;
 mod day_2;
 mod day_3;
 mod day_4;
+mod day_5;
+
+fn time<T>(func: &mut dyn FnMut() -> T) -> T {
+    let start = std::time::Instant::now();
+    let result = func();
+    println!("Time elapsed: {}ms", start.elapsed().as_micros() as f32 / 1000.0);
+
+    result
+}
 
 
 fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap::ArgMatches {
@@ -40,6 +50,7 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(LifeSupportRating {}), resolver)
         .aoc_solution(Box::new(GiantSquid {}), resolver)
         .aoc_solution(Box::new(LosingBoard {}), resolver)
+        .aoc_solution(Box::new(HydrotermalVenture {}), resolver)
         .get_matches()
 }
 
@@ -51,7 +62,7 @@ fn main() {
     let m = get_cli_matches(&mut resolver);
 
     let output = match resolver.resolve(&m) {
-        Ok(solution_args) => { solution_args.run(&m) },
+        Ok(solution_args) => { time(&mut || solution_args.run(&m)) },
         Err(err) => Err(err)
     };
 
