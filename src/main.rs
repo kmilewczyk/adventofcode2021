@@ -1,3 +1,5 @@
+use crate::day_6::cli::UnlimitedLanternfish;
+use crate::day_6::cli::LanternFish;
 use crate::day_5::cli::HydroDiagonal;
 use crate::day_5::cli::HydrotermalVenture;
 use crate::day_4::cli::LosingBoard;
@@ -25,6 +27,7 @@ mod day_2;
 mod day_3;
 mod day_4;
 mod day_5;
+mod day_6;
 
 fn time<T>(func: &mut dyn FnMut() -> T) -> T {
     let start = std::time::Instant::now();
@@ -53,6 +56,8 @@ fn get_cli_matches(resolver: &mut command_line::ClapSubcommandResolver) -> clap:
         .aoc_solution(Box::new(LosingBoard {}), resolver)
         .aoc_solution(Box::new(HydrotermalVenture {}), resolver)
         .aoc_solution(Box::new(HydroDiagonal {}), resolver)
+        .aoc_solution(Box::new(LanternFish {}), resolver)
+        .aoc_solution(Box::new(UnlimitedLanternfish {}), resolver)
         .get_matches()
 }
 
